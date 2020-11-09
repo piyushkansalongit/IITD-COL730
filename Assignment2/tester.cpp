@@ -11,7 +11,7 @@ using namespace std;
 
 #define LOADSIZE 4
 
-const int MINCOUNT = 10;
+const int MINCOUNT = 100000000;
 const int MAXCOUNT = MINCOUNT*2;
 
 inline int randomCount()
@@ -93,7 +93,7 @@ int main()
    sorter.init();
 
    /*=================================================================*/
-   runExperiment(sorter, 0, pSort::BUBBLE); // For example
+   runExperiment(sorter, 0, pSort::RADIX); // For example
 
    //Calling your close() to finalize MPI
    sorter.close();

@@ -4,7 +4,7 @@
 #include "sort.h"
 
 namespace radixsort{
-    void sort(pSort::dataType *data, int ndata);
+    void sort(pSort::dataType *data, int ndata, int b);
 }
 
 #endif
