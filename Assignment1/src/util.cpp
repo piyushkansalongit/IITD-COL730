@@ -268,7 +268,7 @@ namespace util
         {
             for(int j=0; j<buckets[i].size(); j++)
             {
-                mempcpy(&data[index++], &buckets[i][j], sizeof(pSort::dataType));
+                memcpy(&data[index++], &buckets[i][j], sizeof(pSort::dataType));
             }
         }
         return data;

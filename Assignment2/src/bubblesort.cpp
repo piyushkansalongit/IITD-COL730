@@ -42,19 +42,14 @@ void serialMerge(int ID, pSort::dataType *data, int ndata, pSort::dataType *buff
 }
 
 void
-bubblesort::sort(pSort::dataType *data, int ndata){
-
-    int nThreads;
-    // nThreads = std::min(omp_get_max_threads(), ndata);
-    nThreads = 6;
-    omp_set_num_threads(nThreads);
+bubblesort::sort(pSort::dataType *data, int ndata, int nThreads){
     printf("[INFO] Number of processors using for bubble sort = %d\n", nThreads);
 
     int beg_indices[nThreads];
     int end_indices[nThreads];
     int sizes[nThreads];
 
-    #pragma omp parallel default(none) shared(data, ndata, beg_indices, end_indices, sizes, nThreads)
+    #pragma omp parallel default(none) shared(data, ndata, beg_indices, end_indices, sizes, nThreads) num_threads(nThreads)
     {
         int ID, beg_ind, end_ind, size;
 

@@ -11,13 +11,15 @@ using boost::format;
 
 using namespace radixsort;
 
-void radixsort::sort(pSort::dataType *data, int ndata, int b)
+void radixsort::sort(pSort::dataType *data, int ndata, int nThreads, int b)
 {
-    int nThreads;
-    // nThreads = std::min(omp_get_max_threads(), ndata);
-    nThreads = 6;
-    omp_set_num_threads(nThreads);
     printf("[INFO] Number of processors using for radix sort = %d\n", nThreads);
+    
+    if(nThreads==1)
+    {
+        util::serialRadixSort(-1, data, ndata);
+        return;
+    }
 
     int beg_indices[nThreads];
     int end_indices[nThreads];
@@ -28,7 +30,7 @@ void radixsort::sort(pSort::dataType *data, int ndata, int b)
 
     for (int digit = 0; digit < 32 / b; digit++)
     {
-        #pragma omp parallel default(none) shared(data, ndata, b, digit, num_buckets, local_counts, beg_indices, end_indices, sizes, nThreads)
+        #pragma omp parallel default(none) shared(data, ndata, b, digit, num_buckets, local_counts, beg_indices, end_indices, sizes, nThreads) num_threads(nThreads)
         {
             // Declarations
             int ID, beg_ind, end_ind, size;

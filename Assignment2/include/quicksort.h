@@ -5,7 +5,7 @@
 
 namespace quicksort
 {
-    void sort(pSort::dataType *data, int ndata);
+    void sort(pSort::dataType *data, int ndata, int nThreads);
 }
 
 #endif

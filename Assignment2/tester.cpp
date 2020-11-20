@@ -4,6 +4,8 @@
 #include <time.h>
 #include <iostream>
 #include <stdio.h>
+#include <string.h>
+#include <algorithm>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -11,8 +13,8 @@ using namespace std;
 
 #define LOADSIZE 4
 
-const int MINCOUNT = 100000000;
-const int MAXCOUNT = MINCOUNT*2;
+const int MINCOUNT = 1 << 20;
+const int MAXCOUNT = MINCOUNT;
 
 inline int randomCount()
 {
@@ -42,27 +44,31 @@ pSort::dataType *generate(long num_of_records)
    return data;
 }
 
-bool check_sorted(pSort::dataType *test_data, int num_of_records)
+bool compare (pSort::dataType a, pSort::dataType b)
 {
-   for (int i = 1; i < num_of_records; i++){
-      if (test_data[i].key < test_data[i - 1].key){
-         std::cerr << ": Data has not been properly sorted" << std::endl;
-         return false;
-      }
-   }
-   // Also check that payload intact for each key -- TO BE IMPLEMENTED
+  return a.key < b.key;
+}
+
+bool check_sorted(pSort::dataType *test_data, int num_of_records, pSort::dataType *copy_test_data)
+{
+   // printf("Sorting copy of the test data\n");
+   // std::sort(copy_test_data, copy_test_data+num_of_records, compare);
+   // for (int i = 1; i < num_of_records; i++){
+   //    if (test_data[i].key != copy_test_data[i].key){
+   //       std::cerr << ": Data has not been properly sorted" << std::endl;
+   //       return false;
+   //    }
+   // }
    return true;
 }
 
 void runExperiment(pSort sorter, int num_of_records = 0, pSort::SortType type = pSort::BEST, bool term = true)
 {
-   /*Processing command line arguments supplied with mpirun*/
-   if (num_of_records == 0)
-      num_of_records = randomCount();
 
    //Creating an array of structure of type "dataType" declared in sort.h
    pSort::dataType *test_data = generate(num_of_records);
-
+   pSort::dataType *copy_test_data = new pSort::dataType[num_of_records];
+   // memcpy(copy_test_data, test_data, sizeof(pSort::dataType) * num_of_records);
    /*Calling functions defined in pSort library to sort records stored in test_data[]*/
    time_t begin, end;
    time(&begin);
@@ -71,7 +77,7 @@ void runExperiment(pSort sorter, int num_of_records = 0, pSort::SortType type = 
 
    double timetaken = difftime(end, begin);
    
-   if (check_sorted(test_data, num_of_records))
+   if (check_sorted(test_data, num_of_records, copy_test_data))
    {
       std::cout << ": Successful in " << timetaken << std::endl;
    }
@@ -82,7 +88,7 @@ void runExperiment(pSort sorter, int num_of_records = 0, pSort::SortType type = 
       delete test_data;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
    pid_t pid = getpid();
    srand((unsigned int)time(NULL)+pid*pid);
@@ -93,7 +99,7 @@ int main()
    sorter.init();
 
    /*=================================================================*/
-   runExperiment(sorter, 0, pSort::RADIX); // For example
+   runExperiment(sorter, atoi(argv[1]), static_cast<pSort::SortType>(atoi(argv[2]))); // For example
 
    //Calling your close() to finalize MPI
    sorter.close();

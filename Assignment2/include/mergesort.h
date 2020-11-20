@@ -4,6 +4,6 @@
 #include "sort.h"
 
 namespace mergesort{
-    void sort(pSort::dataType *data, int ndata);
+    void sort(pSort::dataType *data, int ndata, int nThreads);
 }
 #endif

@@ -110,6 +110,7 @@ quicksort::redistribute(int ID, int numProcs, pSort::dataType *data, MPI_Datatyp
         }
         left_group_size = std::floor((((double)left_partition_sum * numProcs) / (left_partition_sum + right_partition_sum)) + 0.5);
         left_group_size = std::max(1, left_group_size);
+        left_group_size = std::min(numProcs-1, left_group_size);
         right_group_size = numProcs - left_group_size;
         redistributionInfo[numProcs] = left_group_size;
         redistributionInfo[numProcs + 1] = right_group_size;

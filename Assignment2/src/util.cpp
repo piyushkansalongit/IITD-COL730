@@ -12,7 +12,7 @@ void printDebugMsg(int ID, std::string message)
     printf("\n%d: [DEBUG] %s\n", ID, message.c_str());
 }
 
-void printdata(int ID, char* message, pSort::dataType *data, int ndata)
+void printdata(int ID, const char* message, pSort::dataType *data, int ndata)
 {
     std::ostringstream buffer; 
     if(ndata == 0) return;
